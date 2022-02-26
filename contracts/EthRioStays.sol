@@ -12,7 +12,7 @@ contract EthRioStays is ERC721URIStorage {
   constructor() ERC721("EthRioStays", "ERS22") {}
 
   uint32 public constant dayZero = 1645567342; // 22 Feb 2022
-  address UkraineDAO = 0xFCAd0B19bB29D4674531d6f115237E16AfCE377c; // TODO
+  address ukraineDAO = 0x633b7218644b83D57d90e7299039ebAb19698e9C; // ukrainedao.eth https://twitter.com/Ukraine_DAO/status/1497274679823941632
   // TODO percentage to go to Ukraine DAO
   // TODO: schema conformance URLs
 
