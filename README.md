@@ -63,6 +63,10 @@ As a user authorized to manage rezervations, I should be able to:
 
 TODO after MVP
 
+### Loalty Program*
+
+TODO
+
 ## Guest User Stories
 
 As a traveler, I should be able to:
