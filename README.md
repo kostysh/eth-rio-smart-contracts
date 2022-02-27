@@ -76,13 +76,16 @@ As a traveler, I should be able to:
 - view all the LFs in the area
 - view details of any AP, including their Space information, prices, and reviews
 - book any Space, if it's available, by sending a required amount of xDai
+- buy a Stay NFT on the marketplace*
 
 ### Before Check In
 
 - view all my reservations
-- view my
+- transfer my Stay NFT to someone else
+- modify my information (name, contact details, etc.)
 - on check-in day (or any other day within the Stay range), initiate or confirm check-in
 - leave a review
+- list my Stay NFT for sale on the marketplace*
 
 ### During the Stay
 
