@@ -153,7 +153,7 @@ contract EthRioStays is ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _stayTokenIds;
 
-  function bookAStay(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity, string memory _tokenURI) public payable returns (uint256) {
+  function newStay(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity, string memory _tokenURI) public payable returns (uint256) {
     _checkBookingParams(_spaceId, _startDay, _numberOfDays);
 
     Space memory _s = spaces[_spaceId];
@@ -173,7 +173,7 @@ contract EthRioStays is ERC721URIStorage {
     // TODO: divert all the excess WEI to Ukraine DAO
     // TODO: Receive Ukraine Supporter NFT
 
-    emit StayBooked(_spaceId, _newStayTokenId);
+    emit NewStay(_spaceId, _newStayTokenId);
 
     return _newStayTokenId;
   }
@@ -210,5 +210,5 @@ contract EthRioStays is ERC721URIStorage {
   event LodgingFacilityCreated(bytes32 facilityID, address indexed owner, string dataURI);
   event SpaceAdded(bytes32 facilityID, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
   event SpaceUpdated(bytes32 facilityID, uint256 index, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
-  event StayBooked(bytes32 spaceID, uint256 tokenId);
+  event NewStay(bytes32 spaceID, uint256 tokenId);
 }

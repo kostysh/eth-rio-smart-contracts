@@ -168,26 +168,26 @@ describe('EthRioStays.sol', () => {
 
       it("should return correct values", async () => {
         // Booking: spaceId, dayStart, numberOfDays, numberOfSpaces, tokenURI
-        await alice.ethRioStays.bookAStay(sid, 100, 1, 5, testDataUri + "stay", { value: 1000000 })
+        await alice.ethRioStays.newStay(sid, 100, 1, 5, testDataUri + "stay", { value: 1000000 })
         expect(await alice.ethRioStays.getAvailability(sid, 99, 5)).to.deep.equal([10,5,10,10,10])
-        await alice.ethRioStays.bookAStay(sid, 101, 2, 3, testDataUri + "stay", { value: 1000000 })
+        await alice.ethRioStays.newStay(sid, 101, 2, 3, testDataUri + "stay", { value: 1000000 })
         expect(await alice.ethRioStays.getAvailability(sid, 99, 5)).to.deep.equal([10,5,7,7,10])
-        await alice.ethRioStays.bookAStay(sid, 102, 1, 1, testDataUri + "stay", { value: 1000000 })
+        await alice.ethRioStays.newStay(sid, 102, 1, 1, testDataUri + "stay", { value: 1000000 })
         expect(await alice.ethRioStays.getAvailability(sid, 99, 5)).to.deep.equal([10,5,7,6,10])
-        await alice.ethRioStays.bookAStay(sid, 99, 2, 2, testDataUri + "stay", { value: 1000000 })
+        await alice.ethRioStays.newStay(sid, 99, 2, 2, testDataUri + "stay", { value: 1000000 })
         expect(await alice.ethRioStays.getAvailability(sid, 99, 5)).to.deep.equal([8,3,7,6,10])
-        await alice.ethRioStays.bookAStay(sid, 99, 5, 3, testDataUri + "stay", { value: 1000000 })
+        await alice.ethRioStays.newStay(sid, 99, 5, 3, testDataUri + "stay", { value: 1000000 })
         expect(await alice.ethRioStays.getAvailability(sid, 99, 5)).to.deep.equal([5,0,4,3,7])
       })
     })
 
-    describe("bookAStay()", async () => {
+    describe("newStay()", async () => {
       it("should revert if payment is less than what's required", async () => {
         await expect(
-          alice.ethRioStays.bookAStay(sid, 42, 1, 1, testDataUri + "stay", { value: 12344 })
+          alice.ethRioStays.newStay(sid, 42, 1, 1, testDataUri + "stay", { value: 12344 })
         ).to.be.revertedWith("Need. More. Money!")
         await expect(
-          alice.ethRioStays.bookAStay(sid, 42, 2, 5, testDataUri + "stay", { value: 123449 })
+          alice.ethRioStays.newStay(sid, 42, 2, 5, testDataUri + "stay", { value: 123449 })
         ).to.be.revertedWith("Need. More. Money!")
       })
 
@@ -197,11 +197,11 @@ describe('EthRioStays.sol', () => {
         const testDay = Math.floor((now - dayZero) / 86400)
 
         // This is fine
-        alice.ethRioStays.bookAStay(sid, testDay - 1, 1, 1, testDataUri + "stay", { value: 1000000 })
+        alice.ethRioStays.newStay(sid, testDay - 1, 1, 1, testDataUri + "stay", { value: 1000000 })
 
         // This is not
         await expect(
-          alice.ethRioStays.bookAStay(sid, testDay - 2, 1, 1, testDataUri + "stay", { value: 1000000 })
+          alice.ethRioStays.newStay(sid, testDay - 2, 1, 1, testDataUri + "stay", { value: 1000000 })
         ).to.be.revertedWith("Don't stay in the past")
       })
 
@@ -217,11 +217,11 @@ describe('EthRioStays.sol', () => {
 
       })
 
-      it("should emit StayBooked", async () => {
-        const promise = alice.ethRioStays.bookAStay(sid, 100, 1, 1, testDataUri + "stay", { value: 1000000 })
+      it("should emit NewStay", async () => {
+        const promise = alice.ethRioStays.newStay(sid, 100, 1, 1, testDataUri + "stay", { value: 1000000 })
         promise.then(async (tid) => {
           await expect(promise)
-            .to.emit(alice.ethRioStays, "StayBooked")
+            .to.emit(alice.ethRioStays, "NewStay")
             .withArgs(sid, tid)
         })
       })
