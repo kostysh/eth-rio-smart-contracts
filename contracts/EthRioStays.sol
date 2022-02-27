@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/escrow/ConditionalEscrow.sol";
 
 import "hardhat/console.sol";
 
@@ -12,9 +13,13 @@ contract EthRioStays is ERC721URIStorage {
   constructor() ERC721("EthRioStays", "ERS22") {}
 
   uint32 public constant dayZero = 1645567342; // 22 Feb 2022
-  address ukraineDAO = 0x633b7218644b83D57d90e7299039ebAb19698e9C; // ukrainedao.eth https://twitter.com/Ukraine_DAO/status/1497274679823941632
-  // TODO percentage to go to Ukraine DAO
-  // TODO: schema conformance URLs
+  address private constant _ukraineDAO = 0x633b7218644b83D57d90e7299039ebAb19698e9C; // ukrainedao.eth https://twitter.com/Ukraine_DAO/status/1497274679823941632
+  uint8 private constant _ukraineDAOfee = 2; // percents
+
+  // Schema conformance URLs for reference
+  string public constant lodgingFacilitySchemaURI = "";
+  string public constant spaceSchemaURI = "";
+  string public constant staySchemaURI = "";
 
   struct LodgingFacility{
     address owner;
