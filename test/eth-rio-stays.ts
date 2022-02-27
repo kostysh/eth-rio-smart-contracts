@@ -252,11 +252,7 @@ describe('EthRioStays.sol', () => {
     })
 
     describe("cancelStay()", async () => {
-      it("should send remaining escrow amount to the facility address", async () => {
-
-      })
-
-      it("should divert a % to UkraineDAO", async () => {
+      it("should refund the user and burn the NFT", async () => {
 
       })
 

@@ -4,7 +4,7 @@ Brought to you by Winding Tree.
 
 ## Contract Address
 
-`0x0000000000000000000000000000000000000000`
+TODO `0x0000000000000000000000000000000000000000`
 
 ## Project Goal
 
@@ -61,7 +61,7 @@ As a user authorized to manage rezervations, I should be able to:
 
 ### Stay Management
 
-TODO after MVP
+- see all the guests currently at my facilities
 
 ### Loalty Program*
 
