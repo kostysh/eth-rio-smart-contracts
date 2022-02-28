@@ -8,6 +8,23 @@ Other ETH events: https://windingtree.notion.site/4651949b092742ea96d7513b87cc84
 
 TODO `0x0000000000000000000000000000000000000000`
 
+## Local Development
+
+After you clone the repo, make sure you have (Node Version Manager)[https://github.com/nvm-sh/nvm] installed.
+
+```bash
+git clone git@github.com:windingtree/eth-rio-smart-contracts.git
+cd eth-rio-smart-contracts
+nvm use
+yarn
+```
+
+You may need to install typescript: `npm i -g typescript`
+
+- run tests: `npx hardhat test`
+- run test networ: `npx hardhat node`
+- regenerate typings: `npx hardhat typechain`
+
 ## Project Goal
 
 The goal of this project is to allow lodging providers (hotels, individual apartment owners, etc.) to allow booking of ther properties directly, without any intermediaries.
