@@ -128,6 +128,10 @@ contract EthRioStays is ERC721URIStorage {
   }
 
   /*
+   * Glider
+   */
+
+  /*
    * Availability
    */
   using Counters for Counters.Counter;
@@ -172,6 +176,8 @@ contract EthRioStays is ERC721URIStorage {
 
     // TODO: divert all the excess WEI to Ukraine DAO
     // TODO: Receive Ukraine Supporter NFT
+    // TODO: LIF/WIN
+    // TODO: LF loyalty token
 
     emit NewStay(_spaceId, _newStayTokenId);
 

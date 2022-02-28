@@ -2,6 +2,8 @@
 
 Brought to you by Winding Tree.
 
+Other ETH events: https://windingtree.notion.site/4651949b092742ea96d7513b87cc8419?v=cb368230969749ba87d91681f434a05e
+
 ## Contract Address
 
 TODO `0x0000000000000000000000000000000000000000`
