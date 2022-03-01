@@ -186,9 +186,11 @@ describe('EthRioStays.sol', () => {
         await expect(
           alice.ethRioStays.newStay(sid, 42, 1, 1, testDataUri + "stay", { value: 12344 })
         ).to.be.revertedWith("Need. More. Money!")
+        alice.ethRioStays.newStay(sid, 42, 1, 1, testDataUri + "stay", { value: 12345 })
         await expect(
-          alice.ethRioStays.newStay(sid, 42, 2, 5, testDataUri + "stay", { value: 123449 })
+          bob.ethRioStays.newStay(sid, 42, 2, 5, testDataUri + "stay", { value: 123449 })
         ).to.be.revertedWith("Need. More. Money!")
+        bob.ethRioStays.newStay(sid, 42, 2, 5, testDataUri + "stay", { value: 123450 })
       })
 
       it("should revert if trying to book for further than one day in the past", async () => {
@@ -197,7 +199,7 @@ describe('EthRioStays.sol', () => {
         const testDay = Math.floor((now - dayZero) / 86400)
 
         // This is fine
-        alice.ethRioStays.newStay(sid, testDay - 1, 1, 1, testDataUri + "stay", { value: 1000000 })
+        await alice.ethRioStays.newStay(sid, testDay - 1, 1, 1, testDataUri + "stay", { value: 1000000 })
 
         // This is not
         await expect(
@@ -205,16 +207,16 @@ describe('EthRioStays.sol', () => {
         ).to.be.revertedWith("Don't stay in the past")
       })
 
-      it("should send user a stay NFT", async () => {
-
-      })
-
-      it("should give the facility access to encrypted user information", async () => {
-
+      it("should send user a Stay NFT", async () => {
+        await alice.ethRioStays.newStay(sid, 10000, 1, 1, testDataUri + "stay", { value: 1000000 })
+        expect(await deployer.ethRioStays.balanceOf(alice.address)).to.equal(1);
+        expect(await deployer.ethRioStays.balanceOf(bob.address)).to.equal(0);
+        expect(await deployer.ethRioStays.ownerOf(1)).to.equal(alice.address);
+        expect(await deployer.ethRioStays.tokenURI(1)).to.equal(testDataUri + "stay");
       })
 
       it("should send the money to the facility escrow", async () => {
-
+        expect(false).to.be.true
       })
 
       it("should emit NewStay", async () => {
@@ -228,71 +230,71 @@ describe('EthRioStays.sol', () => {
     })
   })
 
-  describe("modifications, cancellations", async () => {
-    describe("modifyStay()", async () => {
-      it("should revert if there is no availability", async () => {
+  // describe("modifications, cancellations", async () => {
+  //   describe("modifyStay()", async () => {
+  //     it("should revert if there is no availability", async () => {
 
-      })
+  //     })
 
-      it("should revert if payment is not provided", async () => {
+  //     it("should revert if payment is not provided", async () => {
 
-      })
+  //     })
 
-      it("should modify the Stay", async () => {
+  //     it("should modify the Stay", async () => {
 
-      })
+  //     })
 
-      it("should divert a % to UkraineDAO", async () => {
+  //     it("should divert a % to UkraineDAO", async () => {
 
-      })
+  //     })
 
-      it("should emit...", async () => {
+  //     it("should emit...", async () => {
 
-      })
-    })
+  //     })
+  //   })
 
-    describe("cancelStay()", async () => {
-      it("should refund the user and burn the NFT", async () => {
+  //   describe("cancelStay()", async () => {
+  //     it("should refund the user and burn the NFT", async () => {
 
-      })
+  //     })
 
-      it("should emit...", async () => {
+  //     it("should emit...", async () => {
 
-      })
-    })
-  })
+  //     })
+  //   })
+  // })
 
-  describe("check in, check out", async () => {
-    describe("checkIn()", async () => {
-      it("should change Stay status to 'checked_in'", async () => {
+  // describe("check in, check out", async () => {
+  //   describe("checkIn()", async () => {
+  //     it("should change Stay status to 'checked_in'", async () => {
 
-      })
+  //     })
 
-      it("should send the first day escrow amount to the facility address", async () => {
+  //     it("should send the first day escrow amount to the facility address", async () => {
 
-      })
+  //     })
 
-      it("should divert a % to UkraineDAO", async () => {
+  //     it("should divert a % to UkraineDAO", async () => {
 
-      })
+  //     })
 
-      it("should emit...", async () => {
+  //     it("should emit...", async () => {
 
-      })
-    })
+  //     })
+  //   })
 
-    describe("checkOut()", async () => {
-      it("should send remaining escrow amount to the facility address", async () => {
+  //   describe("checkOut()", async () => {
+  //     it("should send remaining escrow amount to the facility address", async () => {
 
-      })
+  //     })
 
-      it("should divert a % to UkraineDAO", async () => {
+  //     it("should divert a % to UkraineDAO", async () => {
 
-      })
+  //     })
 
-      it("should emit...", async () => {
+  //     it("should emit...", async () => {
 
-      })
-    })
-  })
+  //     })
+  //   })
+  // })
 })

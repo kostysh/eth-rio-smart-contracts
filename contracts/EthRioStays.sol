@@ -21,7 +21,7 @@ contract EthRioStays is ERC721URIStorage {
   string public constant spaceSchemaURI = "";
   string public constant staySchemaURI = "";
 
-  struct LodgingFacility{
+  struct LodgingFacility {
     address owner;
     bool active;
     bool exists;
@@ -135,7 +135,7 @@ contract EthRioStays is ERC721URIStorage {
    * Availability
    */
   using Counters for Counters.Counter;
-  Counters.Counter private _tokenIds;
+  Counters.Counter private _stayTokenIds;
 
   // _spaceId -> _daysFromDayZero -> _numberOfBookings
   mapping(bytes32 => mapping(uint16 => uint16)) private _booked;
@@ -153,9 +153,6 @@ contract EthRioStays is ERC721URIStorage {
 
     return _availability;
   }
-
-  using Counters for Counters.Counter;
-  Counters.Counter private _stayTokenIds;
 
   function newStay(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity, string memory _tokenURI) public payable returns (uint256) {
     _checkBookingParams(_spaceId, _startDay, _numberOfDays);
@@ -203,7 +200,7 @@ contract EthRioStays is ERC721URIStorage {
     require(bytes(_uri).length > 0, "Data URI must be provided");
   }
 
-  function _checkBookingParams(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays) internal view {
+  function _checkBookingParams(bytes32 _spaceId, uint256 _startDay, uint16 _numberOfDays) internal view {
     require(dayZero + _startDay * 86400 > block.timestamp - 86400 * 2, "Don't stay in the past");
     require(lodgingFacilities[spaces[_spaceId].lodgingFacilityId].active, "Lodging Facility is inactive");
     require(spaces[_spaceId].active, "Space is inactive");
