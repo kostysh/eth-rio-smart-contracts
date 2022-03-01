@@ -116,6 +116,10 @@ As a traveler, I should be able to:
 - leave a review
 - start a dispute on a review*
 
+## Frens User Stories
+
+Fren is a person who onboards a Lodging Facility. For every booking made at a facility they onboard, they will receive a certain amount (TBD) of LIF tokens.
+
 # Stays Data Management
 
 Here's a breakdown of on-/off-chain data.
