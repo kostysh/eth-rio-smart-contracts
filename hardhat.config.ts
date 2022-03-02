@@ -1,3 +1,5 @@
+import "dotenv/config"
+
 import { HardhatUserConfig } from "hardhat/types"
 
 import "@openzeppelin/hardhat-upgrades"
@@ -9,9 +11,7 @@ import "@typechain/hardhat"
 import "hardhat-deploy"
 import "hardhat-gas-reporter"
 import "solidity-coverage"
-import { nodeUrl, accounts } from "./utils/network"
-
-import "dotenv/config"
+import { nodeUrl, accounts, getKey } from "./utils/network"
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -80,7 +80,7 @@ const config: HardhatUserConfig = {
     },
     rinkeby: {
       url: nodeUrl("rinkeby"),
-      accounts: accounts("rinkeby"),
+      accounts: [ getKey("rinkeby") ],
       tags: ["staging"]
     },
     kovan: {

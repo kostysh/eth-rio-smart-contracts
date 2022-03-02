@@ -46,3 +46,11 @@ export function getMnemonic(networkName?: string): string {
 export function accounts(networkName?: string): { mnemonic: string } {
     return { mnemonic: getMnemonic(networkName) }
 }
+
+export const getKey = (networkName: string): string => {
+    const key = process.env['PRIVATE_KEY']
+    if (!key || key === '') {
+        throw new Error('Key not found');
+    }
+    return key;
+};
