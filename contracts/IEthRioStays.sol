@@ -3,20 +3,41 @@ pragma solidity ^0.8.7;
 
 abstract contract IEthRioStays {
 
-  function registerLodgingFacility(string calldata _dataURI, bool _active) public virtual;
-  function registerLodgingFacilityViaFren(string calldata _dataURI, bool _active, address _fren) public virtual;
+  // Events
+  event LodgingFacilityCreated(bytes32 facilityID, address indexed owner, string dataURI);
+  event SpaceAdded(bytes32 facilityID, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
+  event SpaceUpdated(bytes32 facilityID, uint256 index, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
+  event NewStay(bytes32 spaceID, uint256 tokenId);
 
   // To display all availability in Glider: getActiveLodgingFacilityIds, getSpaceIdsByFacilityId, getAvailability
-  function getAllLodgingFacilityIds() public virtual returns (bytes32[] memory);
-  function getActiveLodgingFacilityIds() public virtual returns (bytes32[] memory);
+  function getAllLodgingFacilityIds() public view virtual returns (bytes32[] memory);
+  function getActiveLodgingFacilityIds() public view virtual returns (bytes32[] memory);
   function getSpaceIdsByFacilityId(bytes32 _lodgingFacilityId) public virtual returns (bytes32[] memory);
   function getActiveSpaceIdsByFacilityId(bytes32 _lodgingFacilityId) public virtual returns (bytes32[] memory);
   function getAvailability(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays) public view virtual returns (uint16[] memory);
 
-  // For the lodging facility owner, to display their facilites
-  function getMyLodgingFacilityIds() public virtual returns (bytes32[] memory);
+  // For the lodging facility owner, to display their facilities
+  function getLodgingFacilityIdsByOwner(address _owner) public virtual returns (bytes32[] memory);
+
+  // Facility and spaces details
+  function getLodgingFacilityById(bytes32 _lodgingFacilityId) public view virtual returns(
+    bool exists,
+    address owner,
+    bool active,
+    string memory dataURI
+  );
+  function getSpaceById(bytes32 _spaceId) public view virtual returns (
+    bool exists,
+    bytes32 lodgingFacilityId,
+    uint16 capacity,
+    uint256 pricePerNightWei,
+    bool active,
+    string memory dataURI
+  );
 
   // Facility management
+  function registerLodgingFacility(string calldata _dataURI, bool _active) public virtual;
+  function registerLodgingFacilityViaFren(string calldata _dataURI, bool _active, address _fren) public virtual;
   function updateLodgingFacility(uint256 _lodgingFacilityId, string calldata _newDataURI) public virtual;
   function activateLodgingFacility(uint256 _lodgingFacilityId) public virtual;
   function deactivateLodgingFacility(uint256 _lodgingFacilityId) public virtual;
