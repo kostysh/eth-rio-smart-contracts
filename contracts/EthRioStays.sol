@@ -21,20 +21,22 @@ contract EthRioStays is ERC721URIStorage {
   string public constant spaceSchemaURI = "";
   string public constant staySchemaURI = "";
 
+  // Lodging Facility is any type of accommodation: hotel, hostel, apartment, etc.
   struct LodgingFacility {
     address owner;
     bool active;
-    bool exists;
-    string dataURI;
+    bool exists; // @todo
+    string dataURI; // must be conformant with "lodgingFacilitySchemaURI"
   }
 
+  // Space = Room Type
   struct Space {
     bytes32 lodgingFacilityId;
-    uint16 capacity;
+    uint16 capacity; // number of rooms of this type
     uint256 pricePerNightWei;
     bool active;
     bool exists;
-    string dataURI;
+    string dataURI; // must be conformant with "spaceSchemaURI"
   }
 
   bytes32[] private _lodgingFacilityIds;
@@ -74,19 +76,19 @@ contract EthRioStays is ERC721URIStorage {
   }
 
   function updateLodgingFacility(uint256 _lodgingFacilityId, string calldata _newDataURI) public {
-    // TODO: owner should be able...
+    // @todo owner should be able...
   }
 
   function deactivateLodgingFacility(uint256 _lodgingFacilityId) public {
-    // TODO: owner should be able to deactivate their facility
+    // @todo owner should be able to deactivate their facility
   }
 
   function yieldLodgingFacility(uint256 _lodgingFacilityId, address _newOwner) public {
-    // TODO: owner should be able to change facility owner
+    // @todo owner should be able to change facility owner
   }
 
   function deleteLodgingFacility(uint256 _lodgingFacilityId) public {
-    // TODO: owner should be able to delete their facility
+    // @todo owner should be able to delete their facility
   }
 
   /*
@@ -171,15 +173,21 @@ contract EthRioStays is ERC721URIStorage {
     _safeMint(_msgSender(), _newStayTokenId);
     _setTokenURI(_newStayTokenId, _tokenURI);
 
-    // TODO: divert all the excess WEI to Ukraine DAO
-    // TODO: Receive Ukraine Supporter NFT
-    // TODO: LIF/WIN
-    // TODO: LF loyalty token
+    // @todo: escrow
+    // facility owner should be able to claim 1-night amount during check-in
+    // then, facility owner should be able to claim full amount on check-out day
+
+    // @todo LIF/WIN
+    // @todo LodgingFacility loyalty token
+    // @todo divert all the excess WEI to Ukraine DAO
+    // @todo Receive Ukraine Supporter NFT
 
     emit NewStay(_spaceId, _newStayTokenId);
 
     return _newStayTokenId;
   }
+
+  // @todo: check-in
 
   /*
    * Helpers
@@ -201,7 +209,7 @@ contract EthRioStays is ERC721URIStorage {
   }
 
   function _checkBookingParams(bytes32 _spaceId, uint256 _startDay, uint16 _numberOfDays) internal view {
-    require(dayZero + _startDay * 86400 > block.timestamp - 86400 * 2, "Don't stay in the past");
+    require(dayZero + _startDay * 86400 > block.timestamp - 86400 * 2, "Don't stay in the past"); // @todo this could be delegated to frontend
     require(lodgingFacilities[spaces[_spaceId].lodgingFacilityId].active, "Lodging Facility is inactive");
     require(spaces[_spaceId].active, "Space is inactive");
     require(_numberOfDays > 0, "Number of days should be 1 or more");
