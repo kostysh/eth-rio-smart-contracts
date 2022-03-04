@@ -1,12 +1,17 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.7;
+// SPDX-License-Identifier: GPL
+pragma solidity ^0.8.0;
+
 
 abstract contract IEthRioStays {
 
   // Events
-  event LodgingFacilityCreated(bytes32 facilityID, address indexed owner, string dataURI);
-  event SpaceAdded(bytes32 facilityID, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
-  event SpaceUpdated(bytes32 facilityID, uint256 index, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
+  event LodgingFacilityCreated(bytes32 facilityId, address indexed owner, string dataURI);
+  event LodgingFacilityUpdated(bytes32 facilityId, string dataURI);
+  event LodgingFacilityActiveState(bytes32 facilityId, bool active);
+  event LodgingFacilityOwnershipTransfer(bytes32 facilityId, address indexed prevOwner, address indexed newOwner);
+  event LodgingFacilityRemoved(bytes32 facilityId);
+  event SpaceAdded(bytes32 facilityId, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
+  event SpaceUpdated(bytes32 facilityId, uint256 index, uint64 capacity, uint64 pricePerNightWei, bool active, string dataURI);
   event NewStay(bytes32 spaceID, uint256 tokenId);
 
   // To display all availability in Glider: getActiveLodgingFacilityIds, getSpaceIdsByFacilityId, getAvailability
@@ -36,8 +41,8 @@ abstract contract IEthRioStays {
   );
 
   // Facility management
+  function registerLodgingFacility(string calldata _dataURI, bool _active, address _fren) public virtual;
   function registerLodgingFacility(string calldata _dataURI, bool _active) public virtual;
-  function registerLodgingFacilityViaFren(string calldata _dataURI, bool _active, address _fren) public virtual;
   function updateLodgingFacility(uint256 _lodgingFacilityId, string calldata _newDataURI) public virtual;
   function activateLodgingFacility(uint256 _lodgingFacilityId) public virtual;
   function deactivateLodgingFacility(uint256 _lodgingFacilityId) public virtual;
@@ -59,7 +64,7 @@ abstract contract IEthRioStays {
   // Stays
   function newStay(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity, string memory _tokenURI) public payable virtual returns (uint256);
   // getting all my Stays is via built-in NFT contract getter
-  // geting Stay details is via NFT's tokenURI getter
+  // getting Stay details is via NFT's tokenURI getter
   function getAllStayIdsByFacilityId(uint256 _lodgingFacilityId) public virtual returns (uint256[] memory);
   function getCurrentStayIdsByFacilityId(uint256 _lodgingFacilityId) public virtual returns (uint256[] memory);
   function getFutureStayIdsByFacilityId(uint256 _lodgingFacilityId) public virtual returns (uint256[] memory);

@@ -9,6 +9,7 @@ import "./IEthRioStays.sol";
 
 import "hardhat/console.sol";
 
+
 contract EthRioStays is IEthRioStays, ERC721URIStorage {
 
   constructor() ERC721("EthRioStays", "ERS22") {}
@@ -28,6 +29,7 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
     bool active;
     bool exists; // @todo
     string dataURI; // must be conformant with "lodgingFacilitySchemaURI"
+    address fren;
   }
 
   // Space = Room Type
@@ -52,6 +54,17 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
 
   // _spaceId -> _daysFromDayZero -> _numberOfBookings
   mapping(bytes32 => mapping(uint16 => uint16)) private _booked;
+
+  /**
+   * Modifiers
+   */
+  modifier onlyLodgingFacilityOwner(bytes32 _lodgingFacilityId) {
+    require(
+      _msgSender() == lodgingFacilities[_lodgingFacilityId].owner,
+      "Only lodging facility owner is allowed"
+    );
+    _;
+  }
 
   /**
    * Lodging Facilities Getters
@@ -94,7 +107,11 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
   }
 
   // Availability of the space
-  function getAvailability(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays) public view returns (uint16[] memory) {
+  function getAvailability(
+    bytes32 _spaceId,
+    uint16 _startDay,
+    uint16 _numberOfDays
+  ) public view returns (uint16[] memory) {
     _checkBookingParams(_spaceId, _startDay, _numberOfDays);
 
     Space memory _s = spaces[_spaceId];
@@ -147,7 +164,9 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
   /*
    * Lodging Facilities Management
    */
-  function registerLodgingFacility(string calldata _dataURI, bool _active) public {
+
+  // Lodging Facility registration (with fren option)
+  function registerLodgingFacility(string calldata _dataURI, bool _active, address _fren) public {
     _dataUriMustBeProvided(_dataURI);
 
     bytes32 _id = keccak256(
@@ -163,41 +182,55 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
       _msgSender(),
       _active,
       true,
-      _dataURI
+      _dataURI,
+      _fren
     );
     _lodgingFacilityIds.push(_id);
-
     _facilityIdsByOwner[_msgSender()].push(_id);
 
     emit LodgingFacilityCreated(_id, _msgSender(), _dataURI);
   }
 
-
-
-  function getMyLodgingFacilityIds() public view returns (bytes32[] memory) {
-    return _facilityIdsByOwner[_msgSender()];
+  // Lodging Facility registration (WITHOUT fren option)
+  function registerLodgingFacility(string calldata _dataURI, bool _active) public virtual {
+    return registerLodgingFacility(_dataURI, _active, address(0));
   }
 
-  function updateLodgingFacility(uint256 _lodgingFacilityId, string calldata _newDataURI) public {
-    // @todo owner should be able...
+  function updateLodgingFacility(uint256 _lodgingFacilityId, string calldata _newDataURI) public onlyLodgingFacilityOwner(_lodgingFacilityId) {
+    lodgingFacilities[_lodgingFacilityId].dataURI = _newDataURI;
+    emit LodgingFacilityUpdated(_lodgingFacilityId, _newDataURI);
   }
 
-  function deactivateLodgingFacility(uint256 _lodgingFacilityId) public {
-    // @todo owner should be able to deactivate their facility
+  function activateLodgingFacility(uint256 _lodgingFacilityId) public onlyLodgingFacilityOwner(_lodgingFacilityId) {
+    lodgingFacilities[_lodgingFacilityId].active = true;
+    emit LodgingFacilityActiveState(_lodgingFacilityId, true);
   }
 
-  function yieldLodgingFacility(uint256 _lodgingFacilityId, address _newOwner) public {
-    // @todo owner should be able to change facility owner
+  function deactivateLodgingFacility(uint256 _lodgingFacilityId) public onlyLodgingFacilityOwner(_lodgingFacilityId) {
+    lodgingFacilities[_lodgingFacilityId].active = false;
+    emit LodgingFacilityActiveState(_lodgingFacilityId, false);
   }
 
-  function deleteLodgingFacility(uint256 _lodgingFacilityId) public {
-    // @todo owner should be able to delete their facility
+  function yieldLodgingFacility(uint256 _lodgingFacilityId, address _newOwner) public onlyLodgingFacilityOwner(_lodgingFacilityId) {
+    emit LodgingFacilityOwnershipTransfer(_lodgingFacilityId, lodgingFacilities[_lodgingFacilityId].owner, _newOwner);
+    lodgingFacilities[_lodgingFacilityId].owner = _newOwner;
+  }
+
+  function deleteLodgingFacility(uint256 _lodgingFacilityId) public onlyLodgingFacilityOwner(_lodgingFacilityId) {
+    lodgingFacilities[_lodgingFacilityId].exists = false;
+    emit LodgingFacilityRemoved(_lodgingFacilityId);
   }
 
   /*
    * Spaces
    */
-  function addSpace(bytes32 _lodgingFacilityId, uint16 _capacity, uint64 _pricePerNightWei, bool _active, string calldata _dataURI) public {
+  function addSpace(
+    bytes32 _lodgingFacilityId,
+    uint16 _capacity,
+    uint64 _pricePerNightWei,
+    bool _active,
+    string calldata _dataURI
+  ) public {
     bytes32 _i = _lodgingFacilityId;
 
     _facilityShouldExist(_i);
@@ -224,7 +257,13 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
     emit SpaceAdded(_i, _capacity, _pricePerNightWei, _active, _dataURI);
   }
 
-  function updateSpace(uint256 _spaceIndex, uint16 _capacity, uint64 _pricePerNightWei, bool _active, string calldata _dataURI) public {
+  function updateSpace(
+    uint256 _spaceIndex,
+    uint16 _capacity,
+    uint64 _pricePerNightWei,
+    bool _active,
+    string calldata _dataURI
+  ) public {
     // TODO
   }
 
@@ -234,7 +273,13 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
    * Glider
    */
 
-  function newStay(bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity, string memory _tokenURI) public payable returns (uint256) {
+  function newStay(
+    bytes32 _spaceId,
+    uint16 _startDay,
+    uint16 _numberOfDays,
+    uint16 _quantity,
+    string memory _tokenURI
+  ) public payable returns (uint256) {
     _checkBookingParams(_spaceId, _startDay, _numberOfDays);
 
     Space memory _s = spaces[_spaceId];

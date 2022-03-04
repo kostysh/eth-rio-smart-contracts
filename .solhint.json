@@ -8,6 +8,10 @@
       }
     ],
     "compiler-version": "off",
-    "no-empty-blocks": "off"
+    "no-empty-blocks": "off",
+    "compiler-fixed": "off",
+    "indent": 2,
+    "max-line-length": "off",
+    "max-states-count": "off"
   }
 }
