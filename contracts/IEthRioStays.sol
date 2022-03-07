@@ -50,9 +50,9 @@ abstract contract IEthRioStays {
   function deleteLodgingFacility(uint256 _lodgingFacilityId) public virtual;
 
   // Delegates (addresses that can perform certain actions, like check-in and check-out)
-  function addDelegate(uint256 _lodgingFacilityId, address _delegate, uint8 _accessLevel) public virtual;
-  function changeAccessLevel(uint256 _lodgingFacilityId, address _delegate, uint8 _accessLevel) public virtual;
-  function removeDelegate(uint256 _lodgingFacilityId, address _delegate) public virtual;
+  // function addDelegate(uint256 _lodgingFacilityId, address _delegate, uint8 _accessLevel) public virtual;
+  // function changeDelegateAccessLevel(uint256 _lodgingFacilityId, address _delegate, uint8 _accessLevel) public virtual;
+  // function removeDelegate(uint256 _lodgingFacilityId, address _delegate) public virtual;
 
   // Escrow
   function getEscrowAmountForMyFacilities() public view virtual returns (uint256);
@@ -70,9 +70,9 @@ abstract contract IEthRioStays {
   function getFutureStayIdsByFacilityId(uint256 _lodgingFacilityId) public virtual returns (uint256[] memory);
   function checkIn(uint256 _tokenId) public virtual;
   function checkOut(uint256 _tokenId) public virtual;
-  function requestChange(uint256 _tokenId, bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity) public payable virtual;
-  function requestCancel(int256 _tokenId) public virtual;
-  function requestResponse(uint256 _tokenId, bool _answer) public virtual;
+  // function requestChange(uint256 _tokenId, bytes32 _spaceId, uint16 _startDay, uint16 _numberOfDays, uint16 _quantity) public payable virtual;
+  // function requestCancel(int256 _tokenId) public virtual;
+  // function requestResponse(uint256 _tokenId, bool _answer) public virtual;
   // @todo: change my contact information
 
   // Reviews

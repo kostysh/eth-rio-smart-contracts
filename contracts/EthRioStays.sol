@@ -11,8 +11,8 @@ import "hardhat/console.sol";
 
 
 contract EthRioStays is IEthRioStays, ERC721URIStorage {
-
-  constructor() ERC721("EthRioStays", "ERS22") {}
+  using Counters for Counters.Counter;
+  Counters.Counter private _stayTokenIds;
 
   uint32 public constant dayZero = 1645567342; // 22 Feb 2022
   address private constant _ukraineDAO = 0x633b7218644b83D57d90e7299039ebAb19698e9C; // ukrainedao.eth https://twitter.com/Ukraine_DAO/status/1497274679823941632
@@ -27,7 +27,7 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
   struct LodgingFacility {
     address owner;
     bool active;
-    bool exists; // @todo
+    bool exists;
     string dataURI; // must be conformant with "lodgingFacilitySchemaURI"
     address fren;
   }
@@ -49,11 +49,10 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
   mapping (bytes32 => bytes32[]) private _spaceIdsByFacilityId;
   mapping (bytes32 => Space) public spaces;
 
-  using Counters for Counters.Counter;
-  Counters.Counter private _stayTokenIds;
-
   // _spaceId -> _daysFromDayZero -> _numberOfBookings
   mapping(bytes32 => mapping(uint16 => uint16)) private _booked;
+
+  constructor() ERC721("EthRioStays", "ERS22") {}
 
   /**
    * Modifiers
@@ -266,8 +265,6 @@ contract EthRioStays is IEthRioStays, ERC721URIStorage {
   ) public {
     // TODO
   }
-
-
 
   /*
    * Glider
